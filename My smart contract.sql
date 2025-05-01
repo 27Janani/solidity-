@@ -24,3 +24,27 @@ contract SimpleStorage {
         return data;
     }
 }
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Wallet {
+    address public owner;
+
+    constructor() {
+        owner = msg.sender; // creator of the contract
+    }
+
+    // Deposit ether into contract
+    receive() external payable {}
+
+    // Withdraw all ether to owners address
+    function withdraw() public {
+        require(msg.sender == owner, "Not owner");
+        payable(owner).transfer(address(this).balance);
+    }
+
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+}
