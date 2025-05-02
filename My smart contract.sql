@@ -87,3 +87,46 @@ contract AccessControl {
         value = _value;
     }
 }
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract EmployeeRegistry {
+    struct Employee {
+        string name;
+        uint salary;
+    }
+
+    mapping(address => Employee) public employees;
+
+    function register(string memory _name, uint _salary) public {
+        employees[msg.sender] = Employee(_name, _salary);
+    }
+
+    function getSalary() public view returns (uint) {
+        return employees[msg.sender].salary;
+    }
+}
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract EmployeeRegistry {
+    struct Employee {
+        string name;
+        uint salary;
+    }
+
+    mapping(address => Employee) public employees;
+
+    function register(string memory _name, uint _salary) public {
+        employees[msg.sender] = Employee(_name, _salary);
+    }
+
+    function getSalary() public view returns (uint) {
+        return employees[msg.sender].salary;
+    }
+}
+
