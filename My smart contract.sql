@@ -215,3 +215,23 @@ contract Dog is Animal {
     }
 }
 
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract FallbackExample {
+    string public lastCalled;
+
+    receive() external payable {
+        lastCalled = "receive";
+    }
+
+    fallback() external payable {
+        lastCalled = "fallback";
+    }
+
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
+    }
+}
+
