@@ -260,3 +260,31 @@ contract TimeLock {
     }
 }
 
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SavingsPool {
+    address public owner;
+    mapping(address => uint) public balances;
+    uint public unlockTime;
+
+    constructor(uint _durationInDays) {
+        owner = msg.sender;
+        unlockTime = block.timestamp + (_durationInDays * 1 days);
+    }
+
+    function deposit() external payable {
+        require(msg.value > 0, "Deposit must be greater than 0");
+        balances[msg.sender] += msg.value;
+    }
+
+    function withdraw() external {
+        require(block.timestamp >= unlockTime, "Funds are locked");
+        uint amount = balances[msg.sender];
+        require(amount > 0, "No funds to withdraw");
+        balances[msg.sender] = 0;
+        payable(msg.sender).transfer(amount);
+    }
+}
+
