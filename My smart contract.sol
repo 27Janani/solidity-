@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+ SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract MyContract {
@@ -6,11 +6,10 @@ contract MyContract {
   bool public boolean1  ="true";
   uint public myUnit = 1;
   int public myInt = 1;
-  address public myAddress = 0x3b9aB87DEcaABC02284FAbf6083376Da6eC9B670
-
-
+  address public myAddress = 0x3b9aB87DEcaABC02284FAbf6083376Da6eC9B670;
 
 }
+
 
 
 contract SimpleStorage {
@@ -288,3 +287,36 @@ contract SavingsPool {
     }
 }
 
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Lottery {
+    address public manager;
+    address[] public players;
+
+    constructor() {
+        manager = msg.sender;
+    }
+
+    function enter() public payable {
+        require(msg.value >= 0.01 ether, "Min 0.01 ETH to enter");
+        players.push(msg.sender);
+    }
+
+    function getPlayers() public view returns (address[] memory) {
+        return players;
+    }
+
+    function random() private view returns (uint) {
+        return uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, players)));
+    }
+
+    function pickWinner() public {
+        require(msg.sender == manager, "Only manager");
+        uint index = random() % players.length;
+        payable(players[index]).transfer(address(this).balance);
+        players = new address ; // reset
+    }
+}
