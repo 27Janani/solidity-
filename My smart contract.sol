@@ -339,5 +339,34 @@ contract Escrow {
     function release() public {
         require(msg.sender == buyer, "Only buyer can release funds");
         payable(seller).transfer(amount);
+        
+    }
+}
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract VotingWithError {
+    error AlreadyVoted(address voter);
+    error InvalidCandidate(string candidate);
+
+    mapping(address => bool) public hasVoted;
+    mapping(string => uint) public votes;
+
+    function vote(string memory candidate) public {
+        if (hasVoted[msg.sender]) {
+            revert AlreadyVoted(msg.sender);
+        }
+
+        if (
+            keccak256(bytes(candidate)) != keccak256(bytes("Alice")) &&
+            keccak256(bytes(candidate)) != keccak256(bytes("Bob"))
+        ) {
+            revert InvalidCandidate(candidate);
+        }
+
+        hasVoted[msg.sender] = true;
+        votes[candidate]++;
     }
 }
