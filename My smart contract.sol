@@ -446,3 +446,38 @@ contract Auction {
         payable(owner).transfer(highestBid);
     }
 }
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract RoleBasedAccess {
+    address public admin;
+    mapping(address => bool) public users;
+
+    constructor() {
+        admin = msg.sender;
+    }
+
+    modifier onlyAdmin() {
+        require(msg.sender == admin, "Admin only");
+        _;
+    }
+
+    modifier onlyUser() {
+        require(users[msg.sender], "User only");
+        _;
+    }
+
+    function addUser(address _user) public onlyAdmin {
+        users[_user] = true;
+    }
+
+    function removeUser(address _user) public onlyAdmin {
+        users[_user] = false;
+    }
+
+    function userAction() public onlyUser returns (string memory) {
+        return "Hello, verified user!";
+    }
+}
