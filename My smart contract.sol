@@ -370,3 +370,37 @@ contract VotingWithError {
         votes[candidate]++;
     }
 }
+    
+
+    // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MultiSigWallet {
+    address[] public owners;
+    uint public approvalsNeeded;
+
+    struct Transaction {
+        address to;
+        uint amount;
+        uint approvals;
+        bool executed;
+        mapping(address => bool) approvedBy;
+    }
+
+    Transaction[] public transactions;
+
+    modifier onlyOwner() {
+        bool isOwner = false;
+        for (uint i = 0; i < owners.length; i++) {
+            if (owners[i] == msg.sender) isOwner = true;
+        }
+        require(isOwner, "Not an owner");
+        _;
+    }
+
+    constructor(address[] memory _owners, uint _approvalsNeeded) {
+        owners = _owners;
+        approvalsNeeded = _approvalsNeeded;
+    }
+
+    function submitTransaction(address _to, uint _amount) public only
