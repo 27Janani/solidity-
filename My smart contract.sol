@@ -404,3 +404,45 @@ contract MultiSigWallet {
     }
 
     function submitTransaction(address _to, uint _amount) public only
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Auction {
+    address public highestBidder;
+    uint public highestBid;
+    address public owner;
+    bool public ended;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    mapping(address => uint) public refunds;
+
+    function bid() public payable {
+        require(!ended, "Auction ended");
+        require(msg.value > highestBid, "Bid too low");
+
+        if (highestBid > 0) {
+            refunds[highestBidder] += highestBid;
+        }
+
+        highestBidder = msg.sender;
+        highestBid = msg.value;
+    }
+
+    function withdrawRefund() public {
+        uint refund = refunds[msg.sender];
+        require(refund > 0, "No refund");
+        refunds[msg.sender] = 0;
+        payable(msg.sender).transfer(refund);
+    }
+
+    function endAuction() public {
+        require(msg.sender == owner, "Not owner");
+        ended = true;
+        payable(owner).transfer(highestBid);
+    }
+}
