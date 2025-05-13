@@ -481,3 +481,21 @@ contract RoleBasedAccess {
         return "Hello, verified user!";
     }
 }
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SplitPayment {
+    address payable[] public recipients;
+
+    constructor(address payable[] memory _recipients) payable {
+        require(msg.value > 0, "No ETH sent");
+        recipients = _recipients;
+        uint split = msg.value / recipients.length;
+
+        for (uint i = 0; i < recipients.length; i++) {
+            recipients[i].transfer(split);
+        }
+    }
+}
