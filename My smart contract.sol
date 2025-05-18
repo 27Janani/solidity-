@@ -516,3 +516,22 @@ contract Counter {
         count--;
     }
 }
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Killable {
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    function destroy() public {
+        require(msg.sender == owner, "Only owner can destroy");
+        selfdestruct(payable(owner));
+    }
+
+    receive() external payable {}
+}
