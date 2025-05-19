@@ -535,3 +535,28 @@ contract Killable {
 
     receive() external payable {}
 }
+  
+
+
+  // SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract WeightedVoting {
+    mapping(address => uint) public shares;
+    mapping(string => uint) public votes;
+
+    constructor() {
+        shares[msg.sender] = 100; // initial owner has 100 votes
+    }
+
+    function giveShares(address to, uint amount) public {
+        require(shares[msg.sender] >= amount, "Not enough shares");
+        shares[msg.sender] -= amount;
+        shares[to] += amount;
+    }
+
+    function vote(string memory candidate) public {
+        require(shares[msg.sender] > 0, "No voting power");
+        votes[candidate] += shares[msg.sender];
+    }
+}
