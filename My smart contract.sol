@@ -560,3 +560,16 @@ contract WeightedVoting {
         votes[candidate] += shares[msg.sender];
     }
 }
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract BasicNFT {
+    mapping(uint => address) public ownerOf;
+    uint public totalSupply;
+
+    function mint() public {
+        ownerOf[totalSupply] = msg.sender;
+        totalSupply++;
+    }
+}
