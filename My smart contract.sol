@@ -604,3 +604,30 @@ contract Proxy {
         }
     }
 }
+
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Bet {
+    address public player1;
+    address public player2;
+    uint public betAmount;
+
+    constructor(address _player2) payable {
+        player1 = msg.sender;
+        player2 = _player2;
+        betAmount = msg.value;
+    }
+
+    function matchBet() public payable {
+        require(msg.sender == player2, "Not opponent");
+        require(msg.value == betAmount, "Must match bet");
+    }
+
+    function payout(address winner) public {
+        require(msg.sender == player1 || msg.sender == player2);
+        payable(winner).transfer(address(this).balance);
+    }
+}
